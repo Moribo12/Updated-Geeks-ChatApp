@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
     <title>Chat Application</title>
 
 </head>
@@ -54,7 +59,7 @@
             </ul>
         </div>
         <div>
-            <a class="logout" href="javascript:void(0)" id="logout">Logout</a>
+            <a class="logout"  id="logout" >Logout</a>
         </div>
     </div>
 
@@ -81,15 +86,16 @@
         <form id="messageForm" name="messageForm" class="hidden">
             <div class="message-input">
                 <input autocomplete="off" type="text" id="message" placeholder="Type your message...">
-                <button>Send</button>
+                <button> Send</button>
             </div>
         </form>
     </div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/main.js"></script>
-<!--<script src="js/custom.js"></script>-->
+<script src="/js/main.js">
+</script>
+<script>
+    const nickName = `[[${userUsername}]]`;
+    connectToChatApp(nickName)
+</script>
 </body>
 </html>

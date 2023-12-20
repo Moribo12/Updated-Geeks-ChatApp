@@ -1,5 +1,8 @@
-package com.example.newChatAppGeeks.chat;
+package com.example.newChatAppGeeks.chat.Controller;
 
+import com.example.newChatAppGeeks.chat.Dto.ChatNotification;
+import com.example.newChatAppGeeks.chat.Model.ChatMessage;
+import com.example.newChatAppGeeks.chat.Service.ChatMessageServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,8 +23,8 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
-        ChatMessage savedMsg = chatMessageService.saveMessage(chatMessage);
-        messagingTemplate.convertAndSendToUser(
+        ChatMessage savedMsg = this.chatMessageService.saveMessage(chatMessage);
+       this.messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(), "/queue/messages",
                 new ChatNotification(
                         savedMsg.getId(),
@@ -35,6 +38,6 @@ public class ChatController {
     @GetMapping("/messages/{senderId}/{recipientId}")
     public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderId, @PathVariable String recipientId) {
         return ResponseEntity
-                .ok(chatMessageService.findChatMessages(senderId, recipientId));
+                .ok(this.chatMessageService.findChatMessages(senderId, recipientId));
     }
 }

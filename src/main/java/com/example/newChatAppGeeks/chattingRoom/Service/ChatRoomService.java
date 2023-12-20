@@ -1,5 +1,7 @@
-package com.example.newChatAppGeeks.chattingRoom;
+package com.example.newChatAppGeeks.chattingRoom.Service;
 
+import com.example.newChatAppGeeks.chattingRoom.Model.ChatRoom;
+import com.example.newChatAppGeeks.chattingRoom.Repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

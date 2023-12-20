@@ -18,6 +18,7 @@ body {
     flex-direction: column;
 }
 
+
 .chat-container {
     display: flex;
     width:100% !important;
@@ -132,16 +133,16 @@ body {
 }
 
 .sender {
-    background-color: #3498db;
-    color: #333;
-    align-self: flex-end;
+    background-color: #333;
+    color: #fff;
+    align-self: flex-end !important;
     padding:15px 20px;
 }
 
 .receiver {
     background-color: #ecf0f1;
     color: #333;
-    align-self: flex-start;
+    align-self: flex-start !important;
       padding:15px 20px;
 }
 
@@ -218,6 +219,7 @@ a.logout {
     background-color:#cdebff;
     padding:10px 10px;
     transform:translate(80px,-40px);
+    cursor:pointer;
 }
 
 

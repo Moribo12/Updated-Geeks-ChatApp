@@ -1,7 +1,7 @@
-package com.example.newChatAppGeeks.user;
+package com.example.newChatAppGeeks.user.Repository;
 
-import com.example.newChatAppGeeks.user.Status;
-import com.example.newChatAppGeeks.user.User;
+import com.example.newChatAppGeeks.user.Model.User;
+import com.example.newChatAppGeeks.user.Enum.Status;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

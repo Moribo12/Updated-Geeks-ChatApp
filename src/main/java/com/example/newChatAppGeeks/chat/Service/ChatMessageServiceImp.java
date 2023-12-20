@@ -1,7 +1,9 @@
-package com.example.newChatAppGeeks.chat;
+package com.example.newChatAppGeeks.chat.Service;
 
 
-import com.example.newChatAppGeeks.chattingRoom.ChatRoomService;
+import com.example.newChatAppGeeks.chat.Repository.ChatMessageRepository;
+import com.example.newChatAppGeeks.chat.Model.ChatMessage;
+import com.example.newChatAppGeeks.chattingRoom.Service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +17,16 @@ public class ChatMessageServiceImp implements ChatMessageService {
     private final ChatRoomService chatRoomService;
 
     public ChatMessage saveMessage(ChatMessage chatMessage) {
-        var chatId = chatRoomService
+        var chatId = this.chatRoomService
                 .getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true)
                 .orElseThrow(); // You can create your own dedicated exception
         chatMessage.setChatId(chatId);
-        repository.save(chatMessage);
+        this.repository.save(chatMessage);
         return chatMessage;
     }
 
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
-        var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
-        return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
+        var chatId = this.chatRoomService.getChatRoomId(senderId, recipientId, false);
+        return chatId.map(this.repository::findByChatId).orElse(new ArrayList<>());
     }
 }

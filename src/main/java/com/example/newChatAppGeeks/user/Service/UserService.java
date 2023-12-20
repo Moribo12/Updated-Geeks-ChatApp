@@ -1,7 +1,7 @@
-package com.example.newChatAppGeeks.user;
+package com.example.newChatAppGeeks.user.Service;
 
+import com.example.newChatAppGeeks.user.Model.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

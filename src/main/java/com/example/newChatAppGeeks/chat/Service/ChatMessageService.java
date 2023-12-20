@@ -1,6 +1,6 @@
-package com.example.newChatAppGeeks.chat;
+package com.example.newChatAppGeeks.chat.Service;
 
-import org.springframework.stereotype.Service;
+import com.example.newChatAppGeeks.chat.Model.ChatMessage;
 
 import java.util.List;
 public interface ChatMessageService {

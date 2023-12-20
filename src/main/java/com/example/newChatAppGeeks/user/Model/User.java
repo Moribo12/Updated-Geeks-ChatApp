@@ -1,6 +1,6 @@
-package com.example.newChatAppGeeks.user;
+package com.example.newChatAppGeeks.user.Model;
 
-import com.example.newChatAppGeeks.user.Status;
+import com.example.newChatAppGeeks.user.Enum.Status;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

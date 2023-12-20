@@ -1,5 +1,6 @@
-package com.example.newChatAppGeeks.chattingRoom;
+package com.example.newChatAppGeeks.chattingRoom.Repository;
 
+import com.example.newChatAppGeeks.chattingRoom.Model.ChatRoom;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

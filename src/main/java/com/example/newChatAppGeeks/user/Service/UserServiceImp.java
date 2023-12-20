@@ -1,6 +1,9 @@
-package com.example.newChatAppGeeks.user;
+package com.example.newChatAppGeeks.user.Service;
 
 
+import com.example.newChatAppGeeks.user.Model.User;
+import com.example.newChatAppGeeks.user.Enum.Status;
+import com.example.newChatAppGeeks.user.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
     @Autowired
-     UserRepository repository;
+    UserRepository repository;
 
 //    public void saveUser(User user) {
 //        user.setStatus(Status.ONLINE);
@@ -44,7 +47,7 @@ public class UserServiceImp implements UserService{
 
 
     public void disconnect(User user) {
-        var storedUser = repository.findById(user.getNickName()).orElse(null);
+        User storedUser = repository.findById(user.getNickName()).orElse(null);
         if (storedUser != null) {
             storedUser.setStatus(Status.OFFLINE);
             repository.save(storedUser);

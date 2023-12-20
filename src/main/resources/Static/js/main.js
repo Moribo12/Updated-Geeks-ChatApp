@@ -46,31 +46,36 @@ let selectedUserId = null;
 //}
 
 
- document.getElementById('usernameForm').addEventListener('submit',function(event) {
+// document.getElementById('usernameForm').addEventListener('submit',function(event) {
+//
+//     event.preventDefault();
+//     nickname = document.getElementById('nickname').value;
+//     password = document.getElementById('password').value;
+//     console.log(nickname)
+//     console.log(password)
+//
+//    connectToChatApp(nickname, password);
+//});
 
-     event.preventDefault();
-     nickname = document.getElementById('nickname').value;
-     password = document.getElementById('password').value;
-     console.log(nickname)
-     console.log(password)
 
-    connectToChatApp(nickname, password);
-});
 
-function connectToChatApp(nickname, password) {
+function connectToChatApp(nickName) {
     // Replace this URL with the URL of your Spring Boot application
     var socket = new SockJS("/ws");
-    var stompClient = Stomp.over(socket);
+    stompClient = Stomp.over(socket);
 
-     stompClient.connect({'nickName': nickname, 'password': password, status:'ONLINE'}, {}, function(frame) {
-        console.log('Connected: ' + frame);
+     stompClient.connect({nickName: nickname, status:'ONLINE'}, {}, function(frame) {
+//        console.log('Connected: ' + frame);
         // Subscribe to a topic, send messages, etc.
-        stompClient.subscribe(`/user/${nickname}/queue/messages`, onMessageReceived);
-        stompClient.subscribe(`/user/public`, onMessageReceived);
+          stompClient.subscribe(`/user/${nickName}/queue/messages`, onMessageReceived);
+//        stompClient.subscribe(`/user/public`, onMessageReceived);
+       //console.log(nickName);
 
     }, function(error) {
         console.log('STOMP error: ' + error);
     });
+
+//    console.log('stomp: '+stompClient);
     findAndDisplayConnectedUsers().then();
 }
 
@@ -154,7 +159,7 @@ function displayMessage(senderId, content) {
 }
 
 async function fetchAndDisplayUserChat() {
-    const userChatResponse = await fetch(`/messages/${nickname}/${selectedUserId}`);
+    const userChatResponse = await fetch(`/messages/${nickName}/${selectedUserId}`);
     const userChat = await userChatResponse.json();
     chatArea.innerHTML = '';
     userChat.forEach(chat => {
@@ -174,18 +179,20 @@ function sendMessage(event) {
     const messageContent = messageInput.value.trim();
     if (messageContent && stompClient) {
         const chatMessage = {
-            senderId: nickname,
+            senderId: nickName,
             recipientId: selectedUserId,
-            content: messageInput.value.trim(),
+            content: messageContent,
             timestamp: new Date()
         };
         stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
-        displayMessage(nickname, messageInput.value.trim());
+        displayMessage(nickName, messageContent);
         messageInput.value = '';
     }
     chatArea.scrollTop = chatArea.scrollHeight;
     event.preventDefault();
 }
+
+
 
 
 async function onMessageReceived(payload) {
@@ -212,16 +219,21 @@ async function onMessageReceived(payload) {
 }
 
 function onLogout() {
+ if(stompClient != null){
     stompClient.send("/app/user.disconnectUser",
         {},
 //          JSON.stringify({nickName: nickname, password: password, email: email, status: 'OFFLINE'})
-        JSON.stringify({nickName: nickname, password: password, status: 'OFFLINE'})
+        JSON.stringify({nickName: nickname, status: 'OFFLINE'})
     );
     window.location.reload();
+    }else{
+     console.error('stompClient is not initialized.');
+    }
+
+    console.log(stompClient)
 }
 
 
-//usernameForm.addEventListener('submit', connect, true); // step 1
 messageForm.addEventListener('submit', sendMessage, true);
 logout.addEventListener('click', onLogout, true);
 window.onbeforeunload = () => onLogout();

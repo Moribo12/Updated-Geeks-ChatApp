@@ -1,5 +1,7 @@
-package com.example.newChatAppGeeks.user;
+package com.example.newChatAppGeeks.user.Controller;
 
+import com.example.newChatAppGeeks.user.Model.User;
+import com.example.newChatAppGeeks.user.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -68,12 +70,16 @@ public class UserController {
 
     @MessageMapping("/user.disconnectUser")
     @SendTo("/user/public")
-    public User disconnectUser(
-            @Payload User user
-    ) {
+    public User disconnectUser(@Payload User user) {
         userService.disconnect(user);
         return user;
     }
+
+//    @PostMapping("/logout")
+//        public String disconnectUser(User user){
+//            userService.disconnect(user);
+//        return "login_page";
+//    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> findConnectedUsers() {
