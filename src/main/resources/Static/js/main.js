@@ -63,19 +63,17 @@ function connectToChatApp(nickName) {
     // Replace this URL with the URL of your Spring Boot application
     var socket = new SockJS("/ws");
     stompClient = Stomp.over(socket);
+    nickname = nickName;
 
      stompClient.connect({nickName: nickname, status:'ONLINE'}, {}, function(frame) {
-//        console.log('Connected: ' + frame);
         // Subscribe to a topic, send messages, etc.
-          stompClient.subscribe(`/user/${nickName}/queue/messages`, onMessageReceived);
-//        stompClient.subscribe(`/user/public`, onMessageReceived);
-       //console.log(nickName);
+        stompClient.subscribe(`/user/${nickName}/queue/messages`, onMessageReceived);
+        stompClient.subscribe(`/user/public`, onMessageReceived);
 
     }, function(error) {
         console.log('STOMP error: ' + error);
     });
 
-//    console.log('stomp: '+stompClient);
     findAndDisplayConnectedUsers().then();
 }
 
@@ -83,8 +81,8 @@ function connectToChatApp(nickName) {
 async function findAndDisplayConnectedUsers() {
     const connectedUsersResponse = await fetch('/users');
     let connectedUsers = await connectedUsersResponse.json();
-
     connectedUsers = connectedUsers.filter(user => user.nickName !== nickname);
+
     const connectedUsersList = document.getElementById('connectedUsers');
     connectedUsersList.innerHTML = '';
 
@@ -97,6 +95,7 @@ async function findAndDisplayConnectedUsers() {
         }
     });
 }
+
 
 function appendUserElement(user, connectedUsersList) {
     const listItem = document.createElement('li');
@@ -122,6 +121,7 @@ function appendUserElement(user, connectedUsersList) {
 
     connectedUsersList.appendChild(listItem);
 }
+
 
 function userItemClick(event) {
     document.querySelectorAll('.user-item').forEach(item => {
@@ -220,12 +220,12 @@ async function onMessageReceived(payload) {
 
 function onLogout() {
  if(stompClient != null){
-    stompClient.send("/app/user.disconnectUser",
+    stompClient.send('/logout',
         {},
-//          JSON.stringify({nickName: nickname, password: password, email: email, status: 'OFFLINE'})
-        JSON.stringify({nickName: nickname, status: 'OFFLINE'})
+       //  JSON.stringify({nickName: nickname, password: password, email: email, status: 'OFFLINE'})
+      JSON.stringify({nickName: nickname, status: 'OFFLINE'})
     );
-    window.location.reload();
+   window.location.href = "/logout/"+nickName;
     }else{
      console.error('stompClient is not initialized.');
     }

@@ -1,5 +1,6 @@
 package com.example.newChatAppGeeks.user.Controller;
 
+import com.example.newChatAppGeeks.user.Enum.Status;
 import com.example.newChatAppGeeks.user.Model.User;
 import com.example.newChatAppGeeks.user.Service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,15 +20,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-
-//    @MessageMapping("/user.addUser")
-//    @SendTo("/user/public")
-//    public User addUser(
-//            @Payload User user
-//    ) {
-//        userService.saveUser(user);
-//        return user;
-//    }
 
     @GetMapping("/register")
     public String getRegisterPage(Model model){
@@ -47,7 +36,7 @@ public class UserController {
     @PostMapping("/register")
     public String register(@ModelAttribute User user){
         System.out.println("register request" +user);
-        User registeredUser = userService.registerUser(user.getNickName(),user.getPassword(),user.getEmail());
+        User registeredUser = this.userService.registerUser(user.getNickName(),user.getPassword(),user.getEmail());
         if(registeredUser != null){
             return "login_page";
         }else{
@@ -58,7 +47,7 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute User user, Model model){
         System.out.println("login request");
-        User authenticated= userService.authenticate(user.getNickName(),user.getPassword());
+        User authenticated= this.userService.authenticate(user.getNickName(),user.getPassword());
         if(authenticated != null){
             model.addAttribute("userUsername",authenticated.getNickName());
             return "index";
@@ -68,21 +57,17 @@ public class UserController {
     }
 
 
-    @MessageMapping("/user.disconnectUser")
-    @SendTo("/user/public")
-    public User disconnectUser(@Payload User user) {
-        userService.disconnect(user);
-        return user;
+    @GetMapping("/logout/{nickName}")
+        public String disconnectUser(@PathVariable String nickName){
+        if(nickName != null ){
+            this.userService.disconnect(nickName);
+        }
+//            messagingTemplate.convertAndSend("/topic/logout", user);
+        return "redirect:/login";
     }
-
-//    @PostMapping("/logout")
-//        public String disconnectUser(User user){
-//            userService.disconnect(user);
-//        return "login_page";
-//    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> findConnectedUsers() {
-        return userService.findConnectedUsers();
+        return this.userService.findConnectedUsers();
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface UserService {
-     User registerUser(String nickName, String password, String email);
-     User authenticate(String nickName, String password);
-     void disconnect(User user);
+    public User registerUser(String nickName, String password, String email);
+     public User authenticate(String nickName, String password);
      ResponseEntity<List<User>> findConnectedUsers();
+     public void disconnect(String nickName);
 }

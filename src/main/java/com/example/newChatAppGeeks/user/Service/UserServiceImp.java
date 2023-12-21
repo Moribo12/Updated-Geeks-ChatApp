@@ -18,17 +18,12 @@ public class UserServiceImp implements UserService {
     @Autowired
     UserRepository repository;
 
-//    public void saveUser(User user) {
-//        user.setStatus(Status.ONLINE);
-//        repository.save(user);
-//    }
-
     public User registerUser(String nickName, String password, String email){
         if(nickName ==null || password ==null){
             return null;
         }
         else{
-            if(repository.findByNickName(nickName).isPresent()){
+            if(this.repository.findById(nickName).isPresent()){
                 System.out.println("User already Exists!");
                 return null;
             }
@@ -37,26 +32,31 @@ public class UserServiceImp implements UserService {
             user.setPassword(password);
             user.setStatus(Status.ONLINE);
             user.setEmail(email);
-            return repository.save(user);
+            return this.repository.save(user);
         }
     }
 
     public User authenticate(String nickName, String password){
-        return repository.findByNickNameAndPassword(nickName,password).orElse(null);
+        User authenticatedUser = this.repository.findByNickNameAndPassword(nickName,password).orElse(null);
+        if(authenticatedUser != null){
+            authenticatedUser.setStatus(Status.ONLINE);
+            this.repository.save(authenticatedUser);
+        }
+        return authenticatedUser;
     }
 
 
-    public void disconnect(User user) {
-        User storedUser = repository.findById(user.getNickName()).orElse(null);
+    public void disconnect(String nickName) {
+        User storedUser = this.repository.findById(nickName).orElse(null);
         if (storedUser != null) {
             storedUser.setStatus(Status.OFFLINE);
-            repository.save(storedUser);
+            this.repository.save(storedUser);
         }
     }
 
     public ResponseEntity<List<User>> findConnectedUsers() {
         try {
-            return new ResponseEntity<>(repository.findAllByStatus(Status.ONLINE),HttpStatus.OK);
+            return new ResponseEntity<>(this.repository.findAllByStatus(Status.ONLINE),HttpStatus.OK);
         }catch(Exception e){
             e.printStackTrace();
         }
