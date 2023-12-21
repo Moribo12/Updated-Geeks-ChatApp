@@ -13,7 +13,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageServiceImp implements ChatMessageService {
-    private final ChatMessageRepository repository;
+
+    private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
 
     public ChatMessage saveMessage(ChatMessage chatMessage) {
@@ -21,12 +22,12 @@ public class ChatMessageServiceImp implements ChatMessageService {
                 .getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true)
                 .orElseThrow(); // You can create your own dedicated exception
         chatMessage.setChatId(chatId);
-        this.repository.save(chatMessage);
+        this.chatMessageRepository.save(chatMessage);
         return chatMessage;
     }
 
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = this.chatRoomService.getChatRoomId(senderId, recipientId, false);
-        return chatId.map(this.repository::findByChatId).orElse(new ArrayList<>());
+        return chatId.map(this.chatMessageRepository::findByChatId).orElse(new ArrayList<>());
     }
 }

@@ -14,57 +14,14 @@ let nickname = null;
 let password = null;
 let selectedUserId = null;
 
-//function connect(event) {
-//    nickname = document.querySelector('#nickname').value.trim();
-//    password = document.querySelector('#password').value.trim();
-//
-//    if (nickname != null && password != null) {
-//        usernamePage.classList.add('hidden');
-//        chatPage.classList.remove('hidden');
-//
-//        const socket = new SockJS('/ws');
-//        stompClient = Stomp.over(socket);
-//
-//        stompClient.connect({}, onConnected, onError);
-//    }
-//    event.preventDefault();
-//}
-//
-//
-//function onConnected() {
-//    stompClient.subscribe(`/user/${nickname}/queue/messages`, onMessageReceived);
-//    stompClient.subscribe(`/user/public`, onMessageReceived);
-//
-////     //register the connected user
-////    stompClient.send("/app/user.addUser",
-////        {},
-////        JSON.stringify({nickName: nickname, password: password, email: email, status: 'ONLINE'})
-////    );
-//
-////    document.querySelector('#connected-user-fullname').textContent = nickname;
-//    findAndDisplayConnectedUsers().then();
-//}
-
-
-// document.getElementById('usernameForm').addEventListener('submit',function(event) {
-//
-//     event.preventDefault();
-//     nickname = document.getElementById('nickname').value;
-//     password = document.getElementById('password').value;
-//     console.log(nickname)
-//     console.log(password)
-//
-//    connectToChatApp(nickname, password);
-//});
-
-
 
 function connectToChatApp(nickName) {
     // Replace this URL with the URL of your Spring Boot application
     var socket = new SockJS("/ws");
     stompClient = Stomp.over(socket);
-    nickname = nickName;
+//    nickname = nickName;
 
+// you can remove the status:ONLINE you don't need it here, cause the status only changes after logging in
      stompClient.connect({nickName: nickname, status:'ONLINE'}, {}, function(frame) {
         // Subscribe to a topic, send messages, etc.
         stompClient.subscribe(`/user/${nickName}/queue/messages`, onMessageReceived);
@@ -222,15 +179,14 @@ function onLogout() {
  if(stompClient != null){
     stompClient.send('/logout',
         {},
-       //  JSON.stringify({nickName: nickname, password: password, email: email, status: 'OFFLINE'})
+       // you can remove the status:OFFLINE you don't need it here, cause the status only changes after logging out in the method with /logout/{nickName}
       JSON.stringify({nickName: nickname, status: 'OFFLINE'})
     );
+    //you can remove and put window.location.reload() or remove it completely
    window.location.href = "/logout/"+nickName;
     }else{
      console.error('stompClient is not initialized.');
     }
-
-    console.log(stompClient)
 }
 
 
